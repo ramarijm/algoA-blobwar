@@ -15,7 +15,7 @@ private:
     //! an array of booleans indicating for each cell whether it is a hole or not.
     const bidiarray<bool>& _holes;
     //! Current player
-    Uint16 _current_player;
+    Sint16 _current_player;
     
     //! Call this function to save your best move.
     //! Multiple call can be done each turn,
@@ -24,9 +24,9 @@ private:
 
 public:
         // Constructor from a current situation
-    Strategy (bidiarray<Sint16>& blobs, 
+    Strategy (bidiarray<Sint16>& blobs,
               const bidiarray<bool>& holes,
-              const Uint16 current_player,
+              const Sint16 current_player,
               void (*saveBestMove)(movement&))
             : _blobs(blobs),_holes(holes), _current_player(current_player), _saveBestMove(saveBestMove)
         {
@@ -46,7 +46,7 @@ public:
          * Apply a move to the current state of blobs
          * Assumes that the move is valid
          */
-    void applyMove (const movement& mv);
+    void applyMove (const movement& movement1);
 
         /**
          * Compute the vector containing every possible moves
