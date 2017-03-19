@@ -30,22 +30,21 @@ Sint32 Strategy::estimateCurrentScore () const {
 }
 
 vector<movement>& Strategy::computeValidMoves (vector<movement>& valid_moves) const {
-    for (Uint8 i = 0; i<8; i++){
-        for (Uint8 j = 0; j<8; j++){
-            if (_blobs.get(i,j) == _current_player){
+    for (Uint8 i = 0; i<8; i++) {
+        for (Uint8 j = 0; j < 8; j++) {
+            if (_blobs.get(i, j) == _current_player) {
                 Uint8 k;
-                for(k = std::max(0, i - 2); k < std::min(i + 3, 8); k++){
+                for (k = std::max(0, i - 2); k < std::min(i + 3, 8); k++) {
                     Uint8 l;
-                    for(l = std::max(0, j - 2); l < std::min(j + 3, 8); l++){
-                        if(!(_blobs.get(k, l) >= 0 || _holes.get(k, l))){
-                            valid_moves.push_back(movement(i,j,k,l));
+                    for (l = std::max(0, j - 2); l < std::min(j + 3, 8); l++) {
+                        if (!(_blobs.get(k, l) >= 0 || _holes.get(k, l))) {
+                            valid_moves.push_back(movement(i, j, k, l));
                         }
                     }
                 }
             }
         }
     }
-
     return valid_moves;
 }
 
@@ -54,7 +53,7 @@ Node Strategy::noeudMax(int depth) const {
     vector<movement> fils;
     fils = computeValidMoves(fils);
     movement mov = fils[0];
-    if (depth == 4){                    /*computing from 6 moves ahead*/
+    if (depth == 6){                    /*computing from 6 moves ahead*/
         val = estimateCurrentScore();
     } else {
         Sint32 tempVal = 0;
@@ -96,27 +95,12 @@ Node Strategy::noeudMin(int depth) const {
 }
 
 
-//algo glouton
+//algo minmax (not anytime)
 void Strategy::computeBestMove () {
-    // To be improved...
-    /*
-    movement maxMv(0,0,0,0);
-    Sint32 maxScore = 0;
-    vector<movement> validMoves;
-    validMoves = computeValidMoves(validMoves);
-    for (uint i = 0 ; i < validMoves.size(); i++){
-        Strategy newStrat = Strategy(*this);
-        movement mv = validMoves[i];
-        Sint32 score;
-        newStrat.applyMove(mv);
-        score = newStrat.estimateCurrentScore();
-        if (score >= maxScore){
-            maxScore = score;
-            maxMv = mv;
-        }
-    }*/
     movement maxMv = noeudMax(0).getMv();
-     _saveBestMove(maxMv);
+
+    _saveBestMove(maxMv);
+
      return;
 }
 
