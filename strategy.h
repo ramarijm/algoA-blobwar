@@ -6,7 +6,7 @@
 #include "movement.h"
 
 
-
+class Node;
 class Strategy {
 
 private:
@@ -58,6 +58,10 @@ public:
          */
     Sint32 estimateCurrentScore () const;
 
+    Node noeudMin(int depth) const ;
+
+    Node noeudMax(int depth) const ;
+
         /**
          * Find the best move.
          */
@@ -66,4 +70,16 @@ public:
     
 };
 
+class Node{
+    Sint32 value;
+    movement mv;
+
+public:
+    Node (Sint32 val,
+          movement mov): value(val), mv(mov)
+    {}
+
+    Sint32 getValue(){ return  value;}
+    movement getMv(){ return mv;}
+};
 #endif

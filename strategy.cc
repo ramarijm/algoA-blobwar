@@ -49,9 +49,57 @@ vector<movement>& Strategy::computeValidMoves (vector<movement>& valid_moves) co
     return valid_moves;
 }
 
+Node Strategy::noeudMax(int depth) const {
+    Sint32 val = -1;
+    vector<movement> fils;
+    fils = computeValidMoves(fils);
+    movement mov = fils[0];
+    if (depth == 4){                    /*computing from 6 moves ahead*/
+        val = estimateCurrentScore();
+    } else {
+        Sint32 tempVal = 0;
+        for (uint i = 0; i < fils.size(); i++) {
+            Strategy tempStrat = Strategy(*this);
+            mov = fils[i];
+            tempStrat.applyMove(mov);
+            tempVal = tempStrat.noeudMin(depth+1).getValue();
+            if (tempVal > val){
+                val = tempVal;
+            } else {
+                break;
+            }
+        }
+    }
+    Node res(val,mov);
+    return res;
+}
+
+Node Strategy::noeudMin(int depth) const {
+    Sint32 val = 65; /*Equivalent to +infinity because each map is 8*8=64 squares*/
+    Sint32 tempRes = 0;
+    vector<movement> fils;
+    fils = computeValidMoves(fils);
+    movement mov = fils[0];
+    for (uint i = 0;i < fils.size(); i++){
+        Strategy tempStrat = Strategy(*this);
+        mov = fils[i];
+        tempStrat.applyMove(mov);
+        tempRes = tempStrat.noeudMax(depth+1).getValue();
+        if (tempRes < val) {
+            val = tempRes;
+        } else {
+            break;
+        }
+    }
+    Node res(val, mov);
+    return  res;
+}
+
+
 //algo glouton
 void Strategy::computeBestMove () {
     // To be improved...
+    /*
     movement maxMv(0,0,0,0);
     Sint32 maxScore = 0;
     vector<movement> validMoves;
@@ -66,8 +114,11 @@ void Strategy::computeBestMove () {
             maxScore = score;
             maxMv = mv;
         }
-    }
+    }*/
+    movement maxMv = noeudMax(0).getMv();
      _saveBestMove(maxMv);
      return;
 }
+
+
 
